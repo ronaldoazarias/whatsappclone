@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+import Api from './Api';
+
 import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
 import ChatWindow from './components/ChatWindow';
 import NewChat from './components/NewChat';
+import Login from './components/Login';
 
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -14,38 +17,48 @@ import SearchIcon from '@material-ui/icons/Search';
 export default () => { 
 
   const [ chatlist, setChatlist ] = useState([
-    {chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
+    /*{chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
     {chatId: 2, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
     {chatId: 3, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 2, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 3, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'},     
-    {chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 2, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 3, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 2, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 3, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'},         
+    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, */
+     
   ]);
 
   const [ activeChat, setActiveChat ] = useState({});
 
-  const [ user, setUser ] = useState({
-    id: 122,
-    avatar: '',
+  const [ user, setUser ] = useState(/*null*/{
+    id: 'YC3sHwXLZgUrCo82iYbnFJoZQ9z1',
     name: 'Ronaldo Azarias',
     avatar: 'https://www.w3schools.com/howto/img_avatar2.png'
   });
 
   const [ showNewChat, setShowNewChat ] = useState(false);
 
+  useEffect(()=>{
+    if (user !== null) {
+      let unsub = Api.onChatList(user.id, setChatlist);
+      return unsub;
+    }
+  }, []);
+
   const handleNewChat = () => {
     setShowNewChat(true);
-}  
+  }  
+
+  const handleLoginData = async (u) => {
+    let newUser = {
+      id: u.uid,
+      name: u.displayName,
+      avatar: u.photoURL
+    };
+    await Api.addUser(newUser);
+    setUser(newUser);
+  }
+
+
+  if(user === null) {
+    return (<Login onReceive={handleLoginData} />);
+  }
 
   return (
     <div className="app-window">
