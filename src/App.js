@@ -16,21 +16,11 @@ import SearchIcon from '@material-ui/icons/Search';
 
 export default () => { 
 
-  const [ chatlist, setChatlist ] = useState([
-    /*{chatId: 1, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 2, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 3, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, 
-    {chatId: 4, title: 'Champs', image: 'https://www.w3schools.com/howto/img_avatar2.png'}, */
-     
-  ]);
+  const [ chatlist, setChatlist ] = useState([]);
 
   const [ activeChat, setActiveChat ] = useState({});
 
-  const [ user, setUser ] = useState(/*null*/{
-    id: 'YC3sHwXLZgUrCo82iYbnFJoZQ9z1',
-    name: 'Ronaldo Azarias',
-    avatar: 'https://www.w3schools.com/howto/img_avatar2.png'
-  });
+  const [ user, setUser ] = useState(null);
 
   const [ showNewChat, setShowNewChat ] = useState(false);
 
@@ -40,6 +30,10 @@ export default () => {
       return unsub;
     }
   }, []);
+
+  useEffect(()=> {
+    alert(user);
+  }, [user])
 
   const handleNewChat = () => {
     setShowNewChat(true);
@@ -52,6 +46,7 @@ export default () => {
       avatar: u.photoURL
     };
     await Api.addUser(newUser);
+
     setUser(newUser);
   }
 
@@ -107,6 +102,7 @@ export default () => {
         {activeChat.chatId !== undefined &&
           <ChatWindow 
             user={user}
+            data={activeChat}
           />        
         }
         {activeChat.chatId === undefined &&
